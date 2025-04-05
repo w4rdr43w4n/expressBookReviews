@@ -5,6 +5,7 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+
 public_users.post("/register", (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -31,8 +32,11 @@ public_users.get('/',function (req, res) {
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    let isbn = req.params.isbn
+    if(books[isbn]){
+        return res.send(JSON.stringify(books[isbn],null,4))
+    }
+    return res.status(404).json({message: `Book with ISBN (${isbn}) not found`});
  });
   
 // Get book details based on author
