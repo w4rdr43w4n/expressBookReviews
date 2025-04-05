@@ -84,11 +84,21 @@ public_users.get('/author/:author',function (req, res) {
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     let title = req.params.title
-    let getByTitle = Object.values(books).filter(book => book.title === title)
-    if(getByTitle){
-        return res.send(JSON.stringify(getByTitle,null,4))
-    }
-    return res.status(404).json({message: `Book with title (${title}) not found`})
+    new Promise((resolve, reject) => {
+        setTimeout(() => {
+        let getByTitle = Object.values(books).filter(book => book.title === title)
+        if(!getByTitle){
+                reject(`Book with title (${title}) not found`)
+        }
+          resolve(getByTitle);
+        }, 1000);
+      })
+      .then((data) => {
+            return res.send(JSON.stringify(data,null,4))
+      })
+      .catch((err) => {
+        res.status(500).json({ error: "Something went wrong", details: err });
+      });
 });
 
 //  Get book review
