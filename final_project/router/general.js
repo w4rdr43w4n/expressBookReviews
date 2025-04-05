@@ -3,6 +3,7 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require("axios");
 
 
 
@@ -68,5 +69,47 @@ public_users.get('/review/:isbn',function (req, res) {
     }
     return res.status(404).json({message: `Book with ISBN (${isbn}) not found`});
 });
+
+// Client Side Code
+
+
+const BASE_URL = "http://localhost:5000"; 
+
+
+async function getAllBooks() {
+  try {
+    const res = await axios.get(`${BASE_URL}/`);
+    console.log("All Books:", res.data);
+  } catch (err) {
+    console.error("Error:", err.message);
+  }
+}
+
+async function getBookByISBN(isbn) {
+    try{
+       const res = await axios.get(`${BASE_URL}/isbn/${isbn}`)
+       console.log("Book by ISBN:", res.data)
+    }catch(err){
+    console.error("Error:", err.message);
+    }
+}
+
+async function getBooksByAuthor(author) {
+  try {
+    const res = await axios.get(`${BASE_URL}/author/${author}`);
+    console.log("Books by Author:", res.data);
+  } catch (err) {
+    console.error("Error:", err.message);
+  }
+}
+
+async function getBooksByTitle(title) {
+    try{
+        let res = await axios.get(`${BASE_URL}/title/${title}`)
+        console.log("Books with Title:", res.data)
+    } catch (err) {
+    console.error("Error:", err.message);
+  }
+}
 
 module.exports.general = public_users;
